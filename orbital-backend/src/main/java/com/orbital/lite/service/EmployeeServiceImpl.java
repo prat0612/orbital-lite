@@ -1,5 +1,6 @@
 package com.orbital.lite.service;
 
+import com.orbital.lite.audit.Auditable;
 import com.orbital.lite.dto.EmployeeRequest;
 import com.orbital.lite.dto.EmployeeResponse;
 import com.orbital.lite.entity.Employee;
@@ -32,6 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Auditable(action = "CREATE", entity = "EMPLOYEE")
     public EmployeeResponse createEmployee(EmployeeRequest request) {
         String normalizedEmail = normalizeEmail(request.email());
         if (employeeRepository.existsByEmailIgnoreCase(normalizedEmail)) {
@@ -63,6 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Auditable(action = "UPDATE", entity = "EMPLOYEE")
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest request) {
         Employee employee = findEmployee(id);
         String normalizedEmail = normalizeEmail(request.email());
@@ -80,6 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Auditable(action = "DELETE", entity = "EMPLOYEE")
     public void deleteEmployee(Long id) {
         Employee employee = findEmployee(id);
         employeeRepository.delete(employee);

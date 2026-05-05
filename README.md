@@ -1,6 +1,29 @@
-# Orbital Lite - Employee Directory
+# Orbital Lite - Workforce Management
 
-Orbital Lite is a full-stack employee directory built with Spring Boot, Spring Data JPA, React, Material UI, Axios, H2 for local development, and PostgreSQL-ready configuration for deployment.
+Orbital Lite is a secure full-stack workforce management system built with Spring Boot, Spring Security, Spring Data JPA, React, Material UI, Axios, H2 for local development, and PostgreSQL-ready configuration for deployment.
+
+## Features
+
+```text
+JWT authentication
+Role-based access control
+BCrypt password hashing
+Employee CRUD
+User and role assignment
+Leave requests and approval workflow
+AOP-based audit logging
+In-app notifications
+Dashboard summary APIs
+Leave and employee reporting APIs
+```
+
+Default local users are seeded on startup:
+
+```text
+admin / admin123       ADMIN
+manager / manager123   MANAGER
+employee / employee123 EMPLOYEE
+```
 
 ## Project Structure
 
@@ -90,6 +113,9 @@ SPRING_PROFILES_ACTIVE=h2
 SPRING_DATASOURCE_URL=jdbc:postgresql://<host>:5432/orbital_db
 SPRING_DATASOURCE_USERNAME=postgres
 SPRING_DATASOURCE_PASSWORD=postgres
+JWT_SECRET=<at-least-32-character-secret>
+JWT_EXPIRATION_MS=86400000
+CORS_ALLOWED_ORIGIN_PATTERNS=http://localhost:3000,http://127.0.0.1:3000,https://*
 ```
 
 Use `SPRING_PROFILES_ACTIVE=h2` for the in-memory database. Use `SPRING_PROFILES_ACTIVE=postgres` with the datasource variables for PostgreSQL.
@@ -102,15 +128,73 @@ VITE_API_BASE_URL=http://localhost:8080/api
 
 For deployment, set `VITE_API_BASE_URL` to the deployed backend URL ending in `/api`.
 
-## API
+## Auth Usage
+
+Login:
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"admin\",\"password\":\"admin123\"}"
+```
+
+Use the returned token on secured requests:
 
 ```text
+Authorization: Bearer <jwt-token>
+```
+
+Register creates an enabled `EMPLOYEE` user:
+
+```text
+POST /api/auth/register
+```
+
+## Role Access
+
+```text
+ADMIN    Full access, user management, employee deletion, reports, leave approvals
+MANAGER  Employee create/update, leave approvals, dashboard, reports
+EMPLOYEE Employee read/search and own leave requests
+```
+
+All `/api/**` endpoints require JWT authentication except `/api/auth/**`. Unauthorized requests return `401`; authenticated users without the required role return `403`.
+
+## API Documentation
+
+```text
+POST   /api/auth/register
+POST   /api/auth/login
+
 POST   /api/employees
 GET    /api/employees?page=0&size=10
 GET    /api/employees/{id}
 PUT    /api/employees/{id}
 DELETE /api/employees/{id}
 GET    /api/employees/search?query=xyz
+
+GET    /api/users
+POST   /api/users
+PUT    /api/users/{id}
+DELETE /api/users/{id}
+
+POST   /api/leaves
+GET    /api/leaves
+GET    /api/leaves/all
+PUT    /api/leaves/{id}/approve
+PUT    /api/leaves/{id}/reject
+
+GET    /api/notifications
+GET    /api/dashboard/summary
+GET    /api/reports/leaves
+GET    /api/reports/employees
+```
+
+Leave workflow:
+
+```text
+Leave duration <= 2 days: automatically approved
+Leave duration > 2 days: pending until ADMIN or MANAGER approval
 ```
 
 ## Docker

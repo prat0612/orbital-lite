@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class EmployeeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<EmployeeResponse> createEmployee(@Valid @RequestBody EmployeeRequest request) {
         log.info("Creating employee with email {}", request.email());
         EmployeeResponse created = employeeService.createEmployee(request);
@@ -46,6 +48,7 @@ public class EmployeeController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Page<EmployeeResponse>> getEmployees(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -54,11 +57,13 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable Long id) {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<EmployeeResponse> updateEmployee(
             @PathVariable Long id,
             @Valid @RequestBody EmployeeRequest request
@@ -68,6 +73,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         log.info("Deleting employee {}", id);
         employeeService.deleteEmployee(id);
@@ -75,6 +81,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<EmployeeResponse>> searchEmployees(@RequestParam String query) {
         return ResponseEntity.ok(employeeService.searchEmployees(query));
     }
