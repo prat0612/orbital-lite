@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 debug: false
 
@@ -7,9 +7,13 @@ spring:
   application:
     name: orbital-lite
   profiles:
-    active: h2
+    active: ${SPRING_PROFILES_ACTIVE:h2}
   jpa:
     open-in-view: false
+
+app:
+  cors:
+    allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:3000,http://127.0.0.1:3000,https://*}
 
 logging:
   level:
