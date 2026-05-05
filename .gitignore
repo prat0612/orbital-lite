@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+orbital-frontend/node_modules/
+
+# Build outputs
+target/
+orbital-backend/target/
+dist/
+orbital-frontend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!orbital-frontend/.env.example
+
+# Logs
+logs/
+*.log

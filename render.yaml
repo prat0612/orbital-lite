@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: orbital-lite-backend
+    runtime: docker
+    rootDir: orbital-backend
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: h2
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+
+  - type: web
+    name: orbital-lite-frontend
+    runtime: static
+    rootDir: orbital-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://orbital-lite-backend.onrender.com/api

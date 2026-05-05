@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+debug: false
+
+spring:
+  application:
+    name: orbital-lite
+  profiles:
+    active: h2
+  jpa:
+    open-in-view: false
+
+logging:
+  level:
+    root: INFO
+    com.orbital.lite: INFO
+    org.hibernate.SQL: INFO
+    org.springframework: INFO
