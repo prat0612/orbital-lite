@@ -83,6 +83,10 @@ public class AppUser {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }

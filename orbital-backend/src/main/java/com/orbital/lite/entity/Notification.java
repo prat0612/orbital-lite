@@ -65,6 +65,10 @@ public class Notification {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public boolean isRead() {
         return read;
     }

@@ -79,4 +79,8 @@ public class Employee {
     public Instant getCreatedAt() {
         return createdAt;
     }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
 }

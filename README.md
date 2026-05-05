@@ -20,9 +20,23 @@ Leave and employee reporting APIs
 Default local users are seeded on startup:
 
 ```text
-admin / admin123       ADMIN
-manager / manager123   MANAGER
-employee / employee123 EMPLOYEE
+admin / admin       ADMIN
+manager / manager   MANAGER
+employee / employee EMPLOYEE
+```
+
+## Demo Data
+
+On startup, the backend runs `DataInitializer` and seeds demo data only when the users table is empty. This prevents duplicate data on restart for persistent databases.
+
+Seeded demo data includes:
+
+```text
+3 users with roles and BCrypt passwords
+12 employees across IT, HR, Finance, and Product
+12 leave requests across PENDING, APPROVED, and REJECTED
+Sample audit logs for login, employee changes, and leave approval
+8 notifications for leave decisions and employee activity
 ```
 
 ## Project Structure
